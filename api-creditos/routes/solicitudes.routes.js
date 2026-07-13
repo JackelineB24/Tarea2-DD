@@ -21,6 +21,32 @@ router.get("/prueba", (req, res) => {
     });
 });
 
+
+// ==========================
+// GET /api/solicitudes
+// ==========================
+router.get("/", (req, res) => {
+    res.json(solicitudes);
+})
+
+// ==========================
+// GET /api/solicitudes/:id
+// ==========================
+router.get("/:id", (req, res) => {
+
+    const solicitud = solicitudes.find(
+        s => s.id === req.params.id
+    );
+
+    if (!solicitud) {
+        return res.status(404).json({
+            mensaje: "Solicitud no encontrada"
+        });
+    }
+
+    res.json(solicitud);
+});
+
 // =========================
 // Crear solicitud
 // POST /api/solicitudes
@@ -46,6 +72,8 @@ router.post(
         res.status(201).json(nuevaSolicitud);
     }
 );
+
+
 // ==========================
 // PUT /api/solicitudes/:id
 // ==========================
@@ -77,5 +105,30 @@ router.put(
         res.json(solicitud);
     }
 );
+
+// ==========================
+// PATCH /api/solicitudes/:id/estado
+// ==========================
+router.patch(
+    "/:id/estado",
+    validate(estadoSchema),
+    (req, res) => {
+
+        const solicitud = solicitudes.find(
+            s => s.id === req.params.id
+        );
+
+        if (!solicitud) {
+            return res.status(404).json({
+                mensaje: "Solicitud no encontrada"
+            });
+        }
+
+        solicitud.estado = req.body.estado;
+
+        res.json(solicitud);
+    }
+);
+
 
 module.exports = router;
