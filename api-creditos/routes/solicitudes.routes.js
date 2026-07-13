@@ -130,5 +130,27 @@ router.patch(
     }
 );
 
+// ==========================
+// DELETE /api/solicitudes/:id
+// ==========================
+router.delete("/:id", (req, res) => {
+
+    const indice = solicitudes.findIndex(
+        s => s.id === req.params.id
+    );
+
+    if (indice === -1) {
+        return res.status(404).json({
+            mensaje: "Solicitud no encontrada"
+        });
+    }
+
+    solicitudes.splice(indice, 1);
+
+    res.json({
+        mensaje: "Solicitud eliminada correctamente"
+    });
+});
+
 
 module.exports = router;
