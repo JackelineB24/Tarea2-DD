@@ -46,5 +46,36 @@ router.post(
         res.status(201).json(nuevaSolicitud);
     }
 );
+// ==========================
+// PUT /api/solicitudes/:id
+// ==========================
+router.put(
+    "/:id",
+    validate(updateSchema),
+    (req, res) => {
+
+        const solicitud = solicitudes.find(
+            s => s.id === req.params.id
+        );
+
+        if (!solicitud) {
+            return res.status(404).json({
+                mensaje: "Solicitud no encontrada"
+            });
+        }
+
+        if (solicitud.estado !== "PENDIENTE") {
+            return res.status(400).json({
+                mensaje: "Solo se pueden actualizar solicitudes pendientes"
+            });
+        }
+
+        solicitud.nombreCompleto = req.body.nombreCompleto ?? solicitud.nombreCompleto;
+        solicitud.montoSolicitado = req.body.montoSolicitado ?? solicitud.montoSolicitado;
+        solicitud.plazoMeses = req.body.plazoMeses ?? solicitud.plazoMeses;
+
+        res.json(solicitud);
+    }
+);
 
 module.exports = router;
